@@ -27,7 +27,8 @@ MAP_FILE := main.map
 CPU := cortex-m3
 
 #Defining compiler parameters
-COMPILER := arm-none-eabi-g++
+COMPILER := g++
+COMPILER_START := arm-none-eabi-
 COMPILER_OPTIONS := -Wall -Os -mthumb -mcpu=$(CPU) $(CPP_INC_DIR)
 
 ############################################## Rules ##############################################
@@ -38,18 +39,18 @@ all: clean main.hex
 #Generating the elf file
 main.elf:
 	@echo "Building target..."
-	@echo "Invoking AVR Compiler..."
-	@$(COMPILER) $(COMPILER_OPTIONS) -c $(CPP_SRC_FILES)
-	@echo "Invoking AVR Linker..."
-	@$(COMPILER) -Wl,-Map,$(MAP_FILE) -mmcu=$(MCU) -o $(ELF_FILE) $(CPP_OBJ_FILES)
+	@echo "Invoking ARM Compiler..."
+	@$(COMPILER_START)$(COMPILER) $(COMPILER_OPTIONS) -c $(CPP_SRC_FILES)
+	@echo "Invoking ARM Linker..."
+	@$(COMPILER_START)$(COMPILER) -Wl,-Map,$(MAP_FILE) -mmcu=$(MCU) -o $(ELF_FILE) $(CPP_OBJ_FILES)
 	@echo "ELF file generated"
 
 main.hex: main.elf
 	@echo "Creating flash image..."
-	@avr-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex $(ELF_FILE) $(HEX_FILE)
+	@$(COMPILER_START)-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex $(ELF_FILE) $(HEX_FILE)
 	@echo "Flash image generated"
 	@echo "Printing program size"
-	@avr-size --format=avr --mcu=atmega8 $(ELF_FILE)
+	@$(COMPILER_START)-size --format=arm --mcu=atmega8 $(ELF_FILE)
 	@echo "Build finished"
 
 #Binaries cleaning rule - No DEP
