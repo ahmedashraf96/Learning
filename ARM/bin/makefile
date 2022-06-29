@@ -10,9 +10,14 @@ CPP_INC_DIR := -I../LIB
 
 #CPP source files
 CPP_SRC_FILES := ../main.cpp
+CPP_SRC_FILES += ../stm32f10x_startupCode.cpp
 
 #CPP object files
 CPP_OBJ_FILES := main.o
+CPP_OBJ_FILES += stm32f10x_startupCode.o
+
+#Linker script file name
+LD_FILE := ../stm32f10x_linkerScript.ld
 
 #ELF file name
 ELF_FILE := main.elf
@@ -29,12 +34,18 @@ CPU := cortex-m3
 #Defining compiler parameters
 COMPILER := g++
 COMPILER_START := arm-none-eabi-
-COMPILER_OPTIONS := -Wall -Os -mthumb -mcpu=$(CPU) $(CPP_INC_DIR)
+COMPILER_OPTIONS := -Wall -Os -mthumb -fno-exceptions -fno-builtin -mcpu=$(CPU) $(CPP_INC_DIR)
+
+# -fno-exceptions: Suppress all the exceptions
+# -fno-builtin: Supress all the builtin functions like: memset and memcpy
 
 ############################################## Rules ##############################################
 
-#Building binaries command - DEP[clean, elf file]
-all: clean main.hex
+#Rebuilding binaries command - DEP[clean, elf file]
+rebuild: clean main.hex
+
+#Building binaries command - DEP[elf file]
+build: main.hex
 
 #Generating the elf file
 main.elf:
@@ -42,15 +53,16 @@ main.elf:
 	@echo "Invoking ARM Compiler..."
 	@$(COMPILER_START)$(COMPILER) $(COMPILER_OPTIONS) -c $(CPP_SRC_FILES)
 	@echo "Invoking ARM Linker..."
-	@$(COMPILER_START)$(COMPILER) -Wl,-Map,$(MAP_FILE) -mmcu=$(MCU) -o $(ELF_FILE) $(CPP_OBJ_FILES)
+	@$(COMPILER_START)$(COMPILER) -nostdlib -T $(LD_FILE) -Wl,-Map,$(MAP_FILE) -o $(ELF_FILE) $(CPP_OBJ_FILES)
 	@echo "ELF file generated"
 
+#Generating the hex file - DEP[elf file]
 main.hex: main.elf
 	@echo "Creating flash image..."
-	@$(COMPILER_START)-objcopy -R .eeprom -R .fuse -R .lock -R .signature -O ihex $(ELF_FILE) $(HEX_FILE)
+	@$(COMPILER_START)objcopy -O ihex $(ELF_FILE) $(HEX_FILE)
 	@echo "Flash image generated"
 	@echo "Printing program size"
-	@$(COMPILER_START)-size --format=arm --mcu=atmega8 $(ELF_FILE)
+	@$(COMPILER_START)size --format=gnu $(ELF_FILE)
 	@echo "Build finished"
 
 #Binaries cleaning rule - No DEP
