@@ -228,7 +228,7 @@ void Reset_Handler(void)
     u8_t* pu8_sectionDes = (u8_t*)&_sdata;
 
     /*Local variable used to calculate section size*/
-    u32_t au32_size = &_edata - &_sdata;
+    u32_t au32_size = (u32_t)&_edata - (u32_t)&_sdata;
 
     /*Local varible used in looping operations*/
     u32_t au32_loopingVar = 0;
@@ -244,7 +244,7 @@ void Reset_Handler(void)
     pu8_sectionSrc = (u8_t*)&_sbss;
 
     /*Calculating .bss section size*/
-    au32_size = &_ebss - &_sbss;
+    au32_size = (u32_t)&_ebss - (u32_t)&_sbss;
 
     /*Looping over .bss section bytes*/
     for(au32_loopingVar = 0; au32_loopingVar < au32_size; au32_loopingVar++)

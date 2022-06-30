@@ -17,7 +17,7 @@ LOAD stm32f10x_startupCode.o
                 0x08000000                gu32Arr_systemsISRs
                 0x08000130                . = ALIGN (0x4)
 
-.text           0x08000130       0xb4
+.text           0x08000130       0xb0
  *(.ARM.*)
  .ARM.attributes
                 0x08000130       0x2d main.o
@@ -29,7 +29,7 @@ LOAD stm32f10x_startupCode.o
  *(.text)
  .text          0x0800018e        0x0 main.o
  *fill*         0x0800018e        0x2 
- .text          0x08000190       0x54 stm32f10x_startupCode.o
+ .text          0x08000190       0x50 stm32f10x_startupCode.o
                 0x08000190                FLASH_Handler
                 0x08000190                SVCall_Handler
                 0x08000190                HardFault_Handler
@@ -102,28 +102,28 @@ LOAD stm32f10x_startupCode.o
                 0x08000190                TAMPER_Handler
                 0x08000192                Reset_Handler
  *(.rodata)
-                0x080001e4                . = ALIGN (0x4)
-                0x080001e4                _etext = .
+                0x080001e0                . = ALIGN (0x4)
+                0x080001e0                _etext = .
 
-.glue_7         0x080001e4        0x0
- .glue_7        0x080001e4        0x0 linker stubs
+.glue_7         0x080001e0        0x0
+ .glue_7        0x080001e0        0x0 linker stubs
 
-.glue_7t        0x080001e4        0x0
- .glue_7t       0x080001e4        0x0 linker stubs
+.glue_7t        0x080001e0        0x0
+ .glue_7t       0x080001e0        0x0 linker stubs
 
-.vfp11_veneer   0x080001e4        0x0
- .vfp11_veneer  0x080001e4        0x0 linker stubs
+.vfp11_veneer   0x080001e0        0x0
+ .vfp11_veneer  0x080001e0        0x0 linker stubs
 
-.v4_bx          0x080001e4        0x0
- .v4_bx         0x080001e4        0x0 linker stubs
+.v4_bx          0x080001e0        0x0
+ .v4_bx         0x080001e0        0x0 linker stubs
 
-.iplt           0x080001e4        0x0
- .iplt          0x080001e4        0x0 stm32f10x_startupCode.o
+.iplt           0x080001e0        0x0
+ .iplt          0x080001e0        0x0 stm32f10x_startupCode.o
 
-.rel.dyn        0x080001e4        0x0
- .rel.iplt      0x080001e4        0x0 stm32f10x_startupCode.o
+.rel.dyn        0x080001e0        0x0
+ .rel.iplt      0x080001e0        0x0 stm32f10x_startupCode.o
 
-.data           0x20000000        0x4 load address 0x080001e4
+.data           0x20000000        0x4 load address 0x080001e0
                 0x20000000                _sdata = .
  *(.data)
  .data          0x20000000        0x1 main.o
@@ -133,10 +133,10 @@ LOAD stm32f10x_startupCode.o
                 0x20000004                . = ALIGN (0x4)
  *fill*         0x20000001        0x3 
 
-.igot.plt       0x20000004        0x0 load address 0x080001e8
+.igot.plt       0x20000004        0x0 load address 0x080001e4
  .igot.plt      0x20000004        0x0 stm32f10x_startupCode.o
 
-.bss            0x20000004        0x4 load address 0x080001e8
+.bss            0x20000004        0x4 load address 0x080001e4
                 0x20000004                _sbss = .
  *(.bss)
  .bss           0x20000004        0x4 main.o
